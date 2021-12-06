@@ -1,21 +1,38 @@
 # This is a sample Python script.
 
+import os
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 import selenium.common.exceptions
+import sys
 from selenium import webdriver
-from selenium.webdriver.common.by import By
+import chromedriver_autoinstaller
+import webbrowser
 from selenium.common.exceptions import StaleElementReferenceException
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 def get_driver():
-    edge_options = webdriver.EdgeOptions()
-    driver = webdriver.ChromiumEdge(options=edge_options)
-    driver.implicitly_wait(0.5)
-    driver.get('https://webinfo.dankook.ac.kr/tiac/comm/surv/surp/views/findSurvQuesBasList.do')
-    return driver
+    try:
+        if getattr(sys, 'frozen', False):
+            chromedriver_path = os.path.join(sys._MEIPASS, "chromedriver.exe")
+            driver = webdriver.Chrome(chromedriver_path)
+        else:
+            driver = webdriver.Chrome()
+
+        driver.get('https://webinfo.dankook.ac.kr/tiac/comm/surv/surp/views/findSurvQuesBasList.do')
+        driver.implicitly_wait(0.5)
+        return driver
+
+    except FileNotFoundError:
+        print('Chromedriver를 찾을 수 없습니다.')
+        print('웹사이트에 접속합니다. 이 사이트에서 프로그램과 같은 디렉토리에 다운로드하세요.')
+        print('현재 Chrome의 버전과 일치한 Chromedriver를 다운로드해야 합니다.')
+        webbrowser.open("https://chromedriver.chromium.org/downloads")
+
+    return
 
 
 def try_login(driver):
@@ -123,12 +140,13 @@ def reply_to_survey_questions(driver):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    driver = get_driver() # edge 창을 열고 포털 로그인창에 접속
+    driver = get_driver() # 크롬 창을 열고 포털 로그인창에 접속
 
-    try_login(driver) # 사용자가 로그인할 때까지 대기
+    if driver != None:
+        try_login(driver) # 사용자가 로그인할 때까지 대기
 
-    assure_able_to_enter_attendance(driver) # 출석확인 조회 페이지 열기
-    
-    go_to_ability_survey(driver) # 역량조사 페이지 열기
+        assure_able_to_enter_attendance(driver) # 출석확인 조회 페이지 열기
 
-    reply_to_survey_questions(driver)
+        go_to_ability_survey(driver) # 역량조사 페이지 열기
+
+        reply_to_survey_questions(driver)
