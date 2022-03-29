@@ -6,7 +6,6 @@ import os
 import selenium.common.exceptions
 import sys
 from selenium import webdriver
-import chromedriver_autoinstaller
 import webbrowser
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.by import By
@@ -92,7 +91,7 @@ def go_to_ability_survey(driver):
 
     for row in survey_table:
         index_num += 1
-        if row.find_element(By.CLASS_NAME, 'ta_l').text == '2021학년도 역량진단검사(2학기)':
+        if row.find_element(By.CLASS_NAME, 'ta_l').text == '2022학년도 역량진단검사(1차)':
             survey_link = row
             break
 
