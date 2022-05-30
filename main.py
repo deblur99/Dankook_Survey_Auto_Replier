@@ -21,7 +21,8 @@ def get_driver():
         else:
             driver = webdriver.Chrome()
 
-        driver.get('https://webinfo.dankook.ac.kr/tiac/comm/surv/surp/views/findSurvQuesBasList.do')
+        survey_url = 'https://webinfo.dankook.ac.kr/comm/surv/surp/views/findSrvshInfoBasList.do?_view=ok'
+        driver.get(survey_url)
         driver.implicitly_wait(0.5)
         return driver
 
