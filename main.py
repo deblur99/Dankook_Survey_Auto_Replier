@@ -98,7 +98,7 @@ def assure_able_to_enter_attendance(driver):
         return False # 역량진단검사 기간이 아닌 경우 False 리턴
 
     driver.implicitly_wait(0.5)
-    return # 역량진단검사 기간일 경우 True 리턴
+    return True  # 역량진단검사 기간일 경우 True 리턴
 
 
 def go_to_ability_survey(driver):
