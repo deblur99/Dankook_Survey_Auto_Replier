@@ -1,6 +1,8 @@
 # This is a sample Python script.
 
 import os
+import time
+
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 import selenium.common.exceptions
@@ -15,9 +17,22 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 def get_driver():
     try:
+        # if getattr(sys, 'frozen', False):
+        #     if os.name == 'nt':
+        #         chromedriver_path = os.path.join(sys._MEIPASS, driver_filename+".exe")
+        #         driver = webdriver.Chrome(chromedriver_path)
+        #     elif os.name == 'posix':
+        #         driver = webdriver.Chrome(driver_filename)
+        # else:
+        #     driver = webdriver.Chrome()
+
         if getattr(sys, 'frozen', False):
-            chromedriver_path = os.path.join(sys._MEIPASS, "chromedriver.exe")
-            driver = webdriver.Chrome(chromedriver_path)
+            if os.name == 'nt':
+                chromedriver_path = os.path.join(sys._MEIPASS, "chromedriver.exe")
+                driver = webdriver.Chrome(chromedriver_path)
+            elif os.name == 'posix':
+                chromedriver_path = "./chromedriver"
+                driver = webdriver.Chrome(chromedriver_path)
         else:
             driver = webdriver.Chrome()
 
@@ -92,7 +107,7 @@ def go_to_ability_survey(driver):
 
     for row in survey_table:
         index_num += 1
-        if row.find_element(By.CLASS_NAME, 'ta_l').text == '2022학년도 역량진단검사(1차)':
+        if '역량진단검사' in row.find_element(By.CLASS_NAME, 'ta_l').text:
             survey_link = row
             break
 
@@ -144,9 +159,7 @@ if __name__ == '__main__':
 
     if driver != None:
         try_login(driver) # 사용자가 로그인할 때까지 대기
-
         assure_able_to_enter_attendance(driver) # 출석확인 조회 페이지 열기
-
         go_to_ability_survey(driver) # 역량조사 페이지 열기
-
         reply_to_survey_questions(driver)
+        time.sleep(3000) # wait for 3000 secs
