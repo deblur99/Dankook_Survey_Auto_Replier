@@ -55,20 +55,23 @@ def try_login(driver):
 
     try:
         WebDriverWait(driver, timeout=120).until(EC.staleness_of(login))
-    except StaleElementReferenceException:
+    except selenium.common.exceptions.NoSuchElementException:
         driver.implicitly_wait(1)
         try_login(driver)
-
-    return
 
 
 def assure_able_to_enter_attendance(driver):
     driver.implicitly_wait(0.5)
 
     # 메인화면 -> 학사정보
-    link = driver.find_element(By.CSS_SELECTOR, '#WUNIV > .ico_school')
-    link.click()
-    driver.implicitly_wait(0.5)
+    try:
+        link = driver.find_element(By.CSS_SELECTOR, '#WUNIV > .ico_school')
+        link.click()
+        driver.implicitly_wait(0.5)
+    except selenium.common.exceptions.NoSuchElementException:
+        try_login(driver)
+        assure_able_to_enter_attendance(driver)
+        return
 
     # 학사정보 -> 수업관리 -> 출강관리 -> 출석확인 조회
     side_link = driver.find_element(By.CSS_SELECTOR, '#WLSSN > a')
@@ -92,10 +95,10 @@ def assure_able_to_enter_attendance(driver):
             alert = driver.switch_to.alert
             alert.accept()
     except:
-        return
+        return False # 역량진단검사 기간이 아닌 경우 False 리턴
 
     driver.implicitly_wait(0.5)
-    return
+    return # 역량진단검사 기간일 경우 True 리턴
 
 
 def go_to_ability_survey(driver):
@@ -159,7 +162,16 @@ if __name__ == '__main__':
 
     if driver != None:
         try_login(driver) # 사용자가 로그인할 때까지 대기
-        assure_able_to_enter_attendance(driver) # 출석확인 조회 페이지 열기
+
+        isTestDate: bool = assure_able_to_enter_attendance(driver) # 출석확인 조회 페이지 열기
+        if isTestDate is False:
+            print("현재 역량진단검사 기간이 아닙니다. 프로그램을 종료합니다.")
+
         go_to_ability_survey(driver) # 역량조사 페이지 열기
         reply_to_survey_questions(driver)
-        time.sleep(3000) # wait for 3000 secs
+
+        # 모든 항목 체크 완료 시 5분 대기
+        timeout_after_checking: int = 300
+        print(f"모든 항목을 체크하였습니다. {int(timeout_after_checking / 60)}분 간 현재 창에서 대기합니다.")
+        time.sleep(timeout_after_checking)  # wait for 3000 secs
+        print(f"자동 체크 후 {int(timeout_after_checking / 60)}분의 시간이 지나 프로그램을 종료합니다.")
