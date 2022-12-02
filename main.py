@@ -26,15 +26,12 @@ def get_driver():
         # else:
         #     driver = webdriver.Chrome()
 
-        if getattr(sys, 'frozen', False):
-            if os.name == 'nt':
-                chromedriver_path = os.path.join(sys._MEIPASS, "chromedriver.exe")
-                driver = webdriver.Chrome(chromedriver_path)
-            elif os.name == 'posix':
-                chromedriver_path = "./chromedriver"
-                driver = webdriver.Chrome(chromedriver_path)
-        else:
-            driver = webdriver.Chrome()
+        if os.name == 'nt':
+            chromedriver_path = os.path.join(sys._MEIPASS, "chromedriver.exe")
+            driver = webdriver.Chrome(chromedriver_path)
+        elif os.name == 'posix':
+            chromedriver_path = "./chromedriver"
+            driver = webdriver.Chrome(chromedriver_path)
 
         survey_url = 'https://webinfo.dankook.ac.kr/comm/surv/surp/views/findSrvshInfoBasList.do?_view=ok'
         driver.get(survey_url)
@@ -95,7 +92,7 @@ def assure_able_to_enter_attendance(driver):
             alert = driver.switch_to.alert
             alert.accept()
     except:
-        return False # 역량진단검사 기간이 아닌 경우 False 리턴
+        return False  # 역량진단검사 기간이 아닌 경우 False 리턴
 
     driver.implicitly_wait(0.5)
     return True  # 역량진단검사 기간일 경우 True 리턴
@@ -158,16 +155,16 @@ def reply_to_survey_questions(driver):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    driver = get_driver() # 크롬 창을 열고 포털 로그인창에 접속
+    driver = get_driver()  # 크롬 창을 열고 포털 로그인창에 접속
 
     if driver != None:
-        try_login(driver) # 사용자가 로그인할 때까지 대기
+        try_login(driver)  # 사용자가 로그인할 때까지 대기
 
-        isTestDate: bool = assure_able_to_enter_attendance(driver) # 출석확인 조회 페이지 열기
+        isTestDate: bool = assure_able_to_enter_attendance(driver)  # 출석확인 조회 페이지 열기
         if isTestDate is False:
             print("현재 역량진단검사 기간이 아닙니다. 프로그램을 종료합니다.")
 
-        go_to_ability_survey(driver) # 역량조사 페이지 열기
+        go_to_ability_survey(driver)  # 역량조사 페이지 열기
         reply_to_survey_questions(driver)
 
         # 모든 항목 체크 완료 시 5분 대기
