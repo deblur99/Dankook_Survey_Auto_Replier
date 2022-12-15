@@ -98,6 +98,41 @@ def assure_able_to_enter_attendance(driver):
     return True  # 역량진단검사 기간일 경우 True 리턴
 
 
+def assure_able_to_enter_final_grade(driver):
+    driver.implicitly_wait(0.5)
+
+    # 메인화면 -> 학사정보
+    try:
+        link = driver.find_element(By.CSS_SELECTOR, '#WUNIV > .ico_school')
+        link.click()
+        driver.implicitly_wait(0.5)
+    except selenium.common.exceptions.NoSuchElementException:
+        try_login(driver)
+        assure_able_to_enter_attendance(driver)
+        return
+
+    # 학사정보 -> 성적관리 -> 최종성적 조회
+    side_link = driver.find_element(By.CSS_SELECTOR, '#WGDMG > a')
+    side_link.click()
+    driver.implicitly_wait(0.5)
+
+    side_link2 = driver.find_element(By.ID, '4023')
+    side_link2_link = side_link2.find_element(By.CSS_SELECTOR, 'a')
+    side_link2_link.click()
+
+    driver.implicitly_wait(0.5)
+
+    try:
+        if EC.alert_is_present():
+            alert = driver.switch_to.alert
+            alert.accept()
+    except:
+        return False  # 역량진단검사 기간이 아닌 경우 False 리턴
+
+    driver.implicitly_wait(0.5)
+    return True  # 역량진단검사 기간일 경우 True 리턴
+
+
 def go_to_ability_survey(driver):
     survey_table = driver.find_elements(By.CSS_SELECTOR, 'table.tbl_striped > tbody > tr')
     driver.implicitly_wait(0.5)
@@ -107,7 +142,8 @@ def go_to_ability_survey(driver):
 
     for row in survey_table:
         index_num += 1
-        if '역량진단검사' in row.find_element(By.CLASS_NAME, 'ta_l').text:
+        if '만족도' in row.find_element(By.CLASS_NAME, 'ta_l').text or '역량' in row.find_element(By.CLASS_NAME,
+                                                                                             'ta_l').text:
             survey_link = row
             break
 
@@ -153,16 +189,32 @@ def reply_to_survey_questions(driver):
     return
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
+def main():
+    task = ["출석", "성적"]
+
+    # 입력받기
+    while True:
+        print("'출석' 또는 '성적'을 입력하세요. 취소를 원하시면 'q'를 입력하세요.")
+        decision: str = input()
+        if decision in task:
+            break
+        elif decision == 'q' or decision == 'Q':
+            return
+        else:
+            print("잘못된 입력입니다. 다시 시도하세요.")
+
     driver = get_driver()  # 크롬 창을 열고 포털 로그인창에 접속
 
     if driver != None:
         try_login(driver)  # 사용자가 로그인할 때까지 대기
 
-        isTestDate: bool = assure_able_to_enter_attendance(driver)  # 출석확인 조회 페이지 열기
+        if decision == task[0]:
+            isTestDate: bool = assure_able_to_enter_attendance(driver)  # 출석확인 조회 페이지 열기
+        elif decision == task[1]:
+            isTestDate: bool = assure_able_to_enter_final_grade(driver)  # 출석확인 조회 페이지 열기
+
         if isTestDate is False:
-            print("현재 역량진단검사 기간이 아닙니다. 프로그램을 종료합니다.")
+            print("현재 설문조사 기간이 아닙니다. 프로그램을 종료합니다.")
 
         go_to_ability_survey(driver)  # 역량조사 페이지 열기
         reply_to_survey_questions(driver)
@@ -172,3 +224,8 @@ if __name__ == '__main__':
         print(f"모든 항목을 체크하였습니다. {int(timeout_after_checking / 60)}분 간 현재 창에서 대기합니다.")
         time.sleep(timeout_after_checking)  # wait for 3000 secs
         print(f"자동 체크 후 {int(timeout_after_checking / 60)}분의 시간이 지나 프로그램을 종료합니다.")
+
+
+# Press the green button in the gutter to run the script.
+if __name__ == '__main__':
+    main()
