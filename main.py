@@ -17,15 +17,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 def get_driver():
     try:
-        # if getattr(sys, 'frozen', False):
-        #     if os.name == 'nt':
-        #         chromedriver_path = os.path.join(sys._MEIPASS, driver_filename+".exe")
-        #         driver = webdriver.Chrome(chromedriver_path)
-        #     elif os.name == 'posix':
-        #         driver = webdriver.Chrome(driver_filename)
-        # else:
-        #     driver = webdriver.Chrome()
-
         if os.name == 'nt':
             chromedriver_path = os.path.join(sys._MEIPASS, "chromedriver.exe")
             driver = webdriver.Chrome(chromedriver_path)
@@ -127,13 +118,13 @@ def assure_able_to_enter_final_grade(driver):
             alert = driver.switch_to.alert
             alert.accept()
     except:
-        return False  # 역량진단검사 기간이 아닌 경우 False 리턴
+        return False  # 만족도조사 기간이 아닌 경우 False 리턴
 
     driver.implicitly_wait(0.5)
-    return True  # 역량진단검사 기간일 경우 True 리턴
+    return True  # 만족도조사 기간일 경우 True 리턴
 
 
-def go_to_ability_survey(driver):
+def go_to_survey(driver, decision):
     survey_table = driver.find_elements(By.CSS_SELECTOR, 'table.tbl_striped > tbody > tr')
     driver.implicitly_wait(0.5)
 
@@ -142,8 +133,7 @@ def go_to_ability_survey(driver):
 
     for row in survey_table:
         index_num += 1
-        if '만족도' in row.find_element(By.CLASS_NAME, 'ta_l').text or '역량' in row.find_element(By.CLASS_NAME,
-                                                                                             'ta_l').text:
+        if decision == row.find_element(By.CLASS_NAME, 'ta_l').text:
             survey_link = row
             break
 
@@ -160,29 +150,70 @@ def go_to_ability_survey(driver):
 def reply_to_survey_questions(driver):
     # 부정 질문 문항 리스트
     negative_question_number_list = ['문항6.', '문항7.', '문항14.', '문항35.', '문항36.']
-    current_question_number = ''
 
     form = driver.find_elements(By.CSS_SELECTOR, 'form#surpListWrapper > div.items_wrap')
 
     driver.implicitly_wait(1)
 
+    # 단일 문항과 테이블을 구별한다.
     # 부정적인 내용 질문 및 주관식 문항에 유의하여 자동으로 체크박스에 번호를 체크한다.
     for item in form:
-        # 체크박스 목록을 가져옴
-        answer_list = item.find_elements(By.CSS_SELECTOR, 'div > div.form_inline > div.form_chck')
+        table = None
+        answer_list = []
+        text_form = None
 
-        # 문항 번호를 가져옴
+        # 단일 문항과 테이블을 구별한다.
         try:
-            current_question_number = item.find_element(By.CSS_SELECTOR, 'p.tit_q > strong').text
+            table = item.find_element(By.CSS_SELECTOR, 'div.tbl_row > table > thead')
+            print(table)
         except selenium.common.exceptions.NoSuchElementException:
-            continue
+            print('no exists')
 
-        if len(answer_list) > 0:  # 주관식 문항 및 지시문이 아닐 때 맨 아래 항목에 체크
-            if current_question_number not in negative_question_number_list:
-                answer_list[-1].click()
+        # 단일 항목 체크
+        if table is None:
+            # 체크박스 목록을 가져옴
+            try:
+                answer_list = item.find_elements(By.CSS_SELECTOR, 'div > div.form_inline > div.form_chck')
+
+                text_form = item.find_element(By.CSS_SELECTOR, 'div.form_text > textarea')
+                print(text_form)
+            except:
+                pass
+
+            if text_form is None:
+                # 문항 번호를 가져옴
+                try:
+                    current_question_number = item.find_element(By.CSS_SELECTOR, 'p.tit_q > strong').text
+                except selenium.common.exceptions.NoSuchElementException:
+                    continue
+
+                if len(answer_list) > 0:  # 주관식 문항 및 지시문이 아닐 때 맨 아래 항목에 체크
+                    if current_question_number not in negative_question_number_list:
+                        answer_list[-1].click()
+
+                    else:
+                        answer_list[0].click()
 
             else:
-                answer_list[0].click()
+                # 주관식 답안에 . 적기
+                text_form.click()
+                text_form.send_keys('.')
+
+        # 테이블 항목 내용 한번에 체크
+        else:
+            try:
+                rows = table.find_elements(By.CSS_SELECTOR, 'td')
+
+                for row in rows:
+                    btn = row.find_elements(By.CSS_SELECTOR, 'div.form_chck > input')
+
+                    # click the rightest answer
+                    driver.execute_script("arguments[arguments.length - 1].click();", btn[-1])
+
+                driver.implicitly_wait(0.05)
+
+            except selenium.common.exceptions.NoSuchElementException:
+                print('no exists')
 
         driver.implicitly_wait(0.05)
 
@@ -190,33 +221,26 @@ def reply_to_survey_questions(driver):
 
 
 def main():
-    task = ["출석", "성적"]
-
     # 입력받기
-    while True:
-        print("'출석' 또는 '성적'을 입력하세요. 취소를 원하시면 'q'를 입력하세요.")
-        decision: str = input()
-        if decision in task:
-            break
-        elif decision == 'q' or decision == 'Q':
-            return
-        else:
-            print("잘못된 입력입니다. 다시 시도하세요.")
+    print("응답하고자 하는 설문조사명을 정확히 입력하세요. 취소를 원하시면 'q'를 입력하세요.")
+    decision: str = input()
+    if decision == 'q' or decision == 'Q':
+        return
 
     driver = get_driver()  # 크롬 창을 열고 포털 로그인창에 접속
 
     if driver != None:
         try_login(driver)  # 사용자가 로그인할 때까지 대기
 
-        if decision == task[0]:
-            isTestDate: bool = assure_able_to_enter_attendance(driver)  # 출석확인 조회 페이지 열기
-        elif decision == task[1]:
-            isTestDate: bool = assure_able_to_enter_final_grade(driver)  # 출석확인 조회 페이지 열기
+        # if decision == task[0]:
+        #   isTestDate: bool = assure_able_to_enter_attendance(driver)  # 출석확인 조회 페이지 열기
+        # elif decision == task[1]:
+        #     isTestDate: bool = assure_able_to_enter_final_grade(driver)  # 출석확인 조회 페이지 열기
 
-        if isTestDate is False:
-            print("현재 설문조사 기간이 아닙니다. 프로그램을 종료합니다.")
+        # if isTestDate is False:
+        #     print("현재 설문조사 기간이 아닙니다. 프로그램을 종료합니다.")
 
-        go_to_ability_survey(driver)  # 역량조사 페이지 열기
+        go_to_survey(driver, decision)  # 역량조사 페이지 열기
         reply_to_survey_questions(driver)
 
         # 모든 항목 체크 완료 시 5분 대기
