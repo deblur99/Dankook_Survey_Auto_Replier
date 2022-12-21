@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d8f9d980-d32f-453c-bbf3-90c1468542f2" name="Default Changelist" comment="ongoing to support tabular question in survey">
+    <list default="true" id="d8f9d980-d32f-453c-bbf3-90c1468542f2" name="Default Changelist" comment="support tablular question and subjective question">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,7 +80,7 @@
       <workItem from="1669958765263" duration="21000" />
       <workItem from="1669958970079" duration="5005000" />
       <workItem from="1670906607969" duration="606000" />
-      <workItem from="1671073144586" duration="8380000" />
+      <workItem from="1671073144586" duration="10838000" />
     </task>
     <task id="LOCAL-00001" summary="support-macos">
       <created>1669701219425</created>
@@ -118,7 +117,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671096548577</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="support tablular question and subjective question">
+      <created>1671527107008</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1671527107009</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -142,7 +148,8 @@
     <MESSAGE value="fixed-chromedrive-version-issue" />
     <MESSAGE value="fixed-chromedriver-version-issue" />
     <MESSAGE value="ongoing to support tabular question in survey" />
-    <option name="LAST_COMMIT_MESSAGE" value="ongoing to support tabular question in survey" />
+    <MESSAGE value="support tablular question and subjective question" />
+    <option name="LAST_COMMIT_MESSAGE" value="support tablular question and subjective question" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -156,7 +163,7 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Dankook_Survey_Auto_Replier$main.coverage" NAME="main 커버리지 결과" MODIFIED="1671526872246" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Dankook_Survey_Auto_Replier$main.coverage" NAME="main 커버리지 결과" MODIFIED="1671536982051" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/survey_automation$main.coverage" NAME="main Coverage Results" MODIFIED="1638795656323" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
