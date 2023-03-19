@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="d8f9d980-d32f-453c-bbf3-90c1468542f2" name="Default Changelist" comment="support tablular question and subjective question">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chromedriver" beforeDir="false" afterPath="$PROJECT_DIR$/chromedriver" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,6 +82,11 @@
       <workItem from="1669958970079" duration="5005000" />
       <workItem from="1670906607969" duration="606000" />
       <workItem from="1671073144586" duration="10838000" />
+      <workItem from="1672576942601" duration="2518000" />
+      <workItem from="1674806870663" duration="1425000" />
+      <workItem from="1675831952517" duration="594000" />
+      <workItem from="1676365456571" duration="18000" />
+      <workItem from="1679197012057" duration="1102000" />
     </task>
     <task id="LOCAL-00001" summary="support-macos">
       <created>1669701219425</created>
@@ -163,7 +169,7 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Dankook_Survey_Auto_Replier$main.coverage" NAME="main 커버리지 결과" MODIFIED="1671536982051" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Dankook_Survey_Auto_Replier$main.coverage" NAME="main 커버리지 결과" MODIFIED="1679197321099" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/survey_automation$main.coverage" NAME="main Coverage Results" MODIFIED="1638795656323" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
