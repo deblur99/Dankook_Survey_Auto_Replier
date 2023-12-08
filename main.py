@@ -1,29 +1,33 @@
-# This is a sample Python script.
+# # This is a sample Python script.
 
-import os
+# import os
+# import time
+
+# # Press Shift+F10 to execute it or replace it with your code.
+# # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+# import selenium.common.exceptions
+# import sys
+# from selenium import webdriver
+# import webbrowser
+# from selenium.common.exceptions import StaleElementReferenceException
+# from selenium.webdriver.common.by import By
+# from selenium.webdriver.support import expected_conditions as EC
+# from selenium.webdriver.support.ui import WebDriverWait
+
 import time
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 import selenium.common.exceptions
-import sys
 from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 import webbrowser
-from selenium.common.exceptions import StaleElementReferenceException
+import selenium.common.exceptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 
 def get_driver():
-    try:
-        if os.name == 'nt':
-            chromedriver_path = os.path.join(sys._MEIPASS, "chromedriver.exe")
-            driver = webdriver.Chrome(chromedriver_path)
-        elif os.name == 'posix':
-            chromedriver_path = "./chromedriver"
-            driver = webdriver.Chrome(chromedriver_path)
-
+    try:            
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         survey_url = 'https://webinfo.dankook.ac.kr/comm/surv/surp/views/findSrvshInfoBasList.do?_view=ok'
         driver.get(survey_url)
         driver.implicitly_wait(0.5)
@@ -149,7 +153,7 @@ def go_to_survey(driver, decision):
 
 def reply_to_survey_questions(driver):
     # 부정 질문 문항 리스트
-    negative_question_number_list = ['문항6.', '문항7.', '문항14.', '문항35.', '문항36.']
+    negative_question_number_list = ['문항5.', '문항6.', '문항13.', '문항34.', '문항35.', '문항36.']
 
     form = driver.find_elements(By.CSS_SELECTOR, 'form#surpListWrapper > div.items_wrap')
 
