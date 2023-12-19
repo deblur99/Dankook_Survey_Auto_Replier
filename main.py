@@ -134,7 +134,7 @@ def reply_to_survey_questions():
     global driver
     
     # 부정 질문 문항 리스트
-    negative_question_number_list = ['문항5.', '문항6.', '문항13.', '문항34.', '문항35.', '문항36.']
+    negative_question_number_list = ['문항5.', '문항6.', '문항13.', '문항34.', '문항35.']
     form = driver.find_elements(By.CSS_SELECTOR, 'form#surpListWrapper > div.items_wrap')
     # driver.implicitly_wait(1)
 
